@@ -1,0 +1,24 @@
+services:
+
+  backend:
+    build: ./Backend
+    container_name: neurroute-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/secret.env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build: ./Frontend
+    container_name: neurroute-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
